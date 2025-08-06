@@ -405,7 +405,8 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><input type="date" value="${item.data || ''}" onchange="recalcular(${index})"></td>
-          <td><input type="number" value="${item.anterior}" onchange="recalcular(${index})"></td>
+          <td><input type="number" value="${item.bloco}" readonly></td>
+          <td><input type="number" value="${item.inicial}" onchange="recalcular(${index})"></td>
           <td><input type="number" value="${item.final}" onchange="recalcular(${index})"></td>
           <td><input type="number" value="${item.recebeu}" readonly></td>
           <td><input type="number" value="${item.devolveu}" onchange="recalcular(${index})"></td>
@@ -1111,5 +1112,6 @@
 
 </body>
 </html>
+
 
 
