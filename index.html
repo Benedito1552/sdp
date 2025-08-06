@@ -328,7 +328,7 @@
 
 <!-- SLIDE 4: VENDAS -->
 <div id="slide4" class="slide">
-<button class="btn" onclick="showSlide(1)">Voltar</button>
+  <button class="btn" onclick="showSlide(1)">Voltar</button>
   <style>
     #slide4 { background: #fff8e1; }
     #vendedorSelecionado { font-weight: bold; margin-bottom: 10px; }
@@ -350,6 +350,7 @@
     <thead>
       <tr>
         <th>Data</th>
+        <th>Bloco</th>
         <th>Anterior</th>
         <th>Final</th>
         <th>Recebeu</th>
@@ -404,6 +405,7 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><input type="date" value="${item.data || ''}" onchange="recalcular(${index})"></td>
+          <td><input type="number" value="${item.bloco || ''}" onchange="recalcular(${index})"></td>
           <td><input type="number" value="${item.anterior}" onchange="recalcular(${index})"></td>
           <td><input type="number" value="${item.final}" onchange="recalcular(${index})"></td>
           <td><input type="number" value="${item.recebeu}" readonly></td>
@@ -430,6 +432,7 @@
 
       historico.push({
         data: '',
+        bloco: '',
         anterior: 0,
         final: 0,
         recebeu: 0,
@@ -465,14 +468,15 @@
         const cells = row.querySelectorAll('input');
         historico.push({
           data: cells[0].value,
-          anterior: parseInt(cells[1].value) || 0,
-          final: parseInt(cells[2].value) || 0,
-          recebeu: parseInt(cells[3].value) || 0,
-          devolveu: parseInt(cells[4].value) || 0,
-          vendeu: parseInt(cells[5].value) || 0,
-          apurou: parseFloat(cells[6].value) || 0,
-          pagou: parseFloat(cells[7].value) || 0,
-          deve: parseFloat(cells[8].value) || 0
+          bloco: cells[1].value,
+          anterior: parseInt(cells[2].value) || 0,
+          final: parseInt(cells[3].value) || 0,
+          recebeu: parseInt(cells[4].value) || 0,
+          devolveu: parseInt(cells[5].value) || 0,
+          vendeu: parseInt(cells[6].value) || 0,
+          apurou: parseFloat(cells[7].value) || 0,
+          pagou: parseFloat(cells[8].value) || 0,
+          deve: parseFloat(cells[9].value) || 0
         });
       });
 
@@ -483,10 +487,10 @@
     function recalcular(index) {
       const row = document.querySelectorAll('#tabelaVendas tbody tr')[index];
       const inputs = row.querySelectorAll('input');
-      const anterior = parseInt(inputs[1].value) || 0;
-      const final = parseInt(inputs[2].value) || 0;
-      const devolveu = parseInt(inputs[4].value) || 0;
-      const pagou = parseFloat(inputs[7].value) || 0;
+      const anterior = parseInt(inputs[2].value) || 0;
+      const final = parseInt(inputs[3].value) || 0;
+      const devolveu = parseInt(inputs[5].value) || 0;
+      const pagou = parseFloat(inputs[8].value) || 0;
 
       const recebeu = final - anterior;
       const vendeu = recebeu - devolveu;
@@ -498,10 +502,10 @@
       const apurou = vendeu * cotacao;
       const deve = apurou - pagou;
 
-      inputs[3].value = recebeu;
-      inputs[5].value = vendeu;
-      inputs[6].value = apurou.toFixed(2);
-      inputs[8].value = deve.toFixed(2);
+      inputs[4].value = recebeu;
+      inputs[6].value = vendeu;
+      inputs[7].value = apurou.toFixed(2);
+      inputs[9].value = deve.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', carregarVendedoresSelect);
@@ -1109,3 +1113,4 @@
 
 </body>
 </html>
+
