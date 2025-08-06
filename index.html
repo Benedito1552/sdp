@@ -1046,11 +1046,12 @@
 
 <!-- SLIDE 10 - ZERAR SISTEMA -->
 <div class="slide" id="slide10" style="padding: 20px; background: #ffe6e6;">
-  <button class="btn" onclick="showSlide(1)">Voltar</button>
+  <button class="btn" onclick="mostrarSlide(1)">Voltar</button>
   <h2 style="color: #cc0000; text-align: center;">ZERAR SISTEMA</h2>
   <p style="color: #cc0000; font-weight: bold;">
-    ATENÇÃO: Esta ação apagará todos os dados do sistema, incluindo vendedores, vendas, receitas e despesas.<br>
-    Esta operação não poderá ser desfeita!
+    ATENÇÃO: Esta ação apagará <u>todos os dados</u> do sistema:<br>
+    vendedores, vendas, receitas, despesas e configurações.<br><br>
+    <strong>Esta operação é irreversível!</strong>
   </p>
 
   <label for="senhaReset">Digite a senha para confirmar:</label>
@@ -1068,7 +1069,7 @@
     document.getElementById('btnZerar').addEventListener('click', () => {
       const senha = document.getElementById('senhaReset').value.trim();
       const msg = document.getElementById('msgReset');
-      const senhaCorreta = 'admin1234'; // ajustar conforme sua senha
+      const senhaCorreta = 'admin1234'; // Senha de autorização
 
       if (senha !== senhaCorreta) {
         msg.style.color = 'red';
@@ -1076,16 +1077,16 @@
         return;
       }
 
-      // Limpa completamente o localStorage, apagando todos os dados
+      // Apagar 100% do localStorage
       localStorage.clear();
 
       msg.style.color = 'green';
-      msg.textContent = 'Sistema zerado com sucesso!';
+      msg.textContent = '✅ Sistema zerado com sucesso!';
 
       // Limpar campo senha
       document.getElementById('senhaReset').value = '';
 
-      // Opcional: voltar para painel depois de alguns segundos
+      // Retornar ao painel após 2,5 segundos
       setTimeout(() => {
         mostrarSlide(1);
         msg.textContent = '';
@@ -1109,3 +1110,4 @@
 
 </body>
 </html>
+
