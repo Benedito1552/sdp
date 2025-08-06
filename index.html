@@ -321,7 +321,122 @@
     // Carrega lista ao abrir o slide
     document.addEventListener('DOMContentLoaded', listarVendedores);
   </script>
-<button class="btn" onclick="showSlide(1)">Voltar</button></div>
+<h3>Lista de Vendedores</h3>
+
+  <table border="1" width="100%" style="border-collapse: collapse; margin-bottom: 15px;">
+    <thead>
+      <tr style="background:#ddd;">
+        <th>Nome</th>
+        <th>Localidade</th>
+        <th>Cotação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="listaVendedores"></tbody>
+  </table>
+
+  <!-- Modal simples para editar vendedor -->
+  <div id="modalEditar" style="display:none; position: fixed; top:50%; left:50%; transform: translate(-50%, -50%);
+      background:#fff; border: 1px solid #ccc; padding: 20px; z-index: 1000; width: 300px; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+    <h3>Editar Vendedor</h3>
+    <form id="formEditarVendedor">
+      <label>Nome:</label>
+      <input type="text" id="editNome" required style="width: 100%; margin-bottom: 10px;">
+      <label>Localidade:</label>
+      <input type="text" id="editLocalidade" required style="width: 100%; margin-bottom: 10px;">
+      <label>Cotação:</label>
+      <input type="number" step="0.01" id="editCotacao" required style="width: 100%; margin-bottom: 10px;">
+      <button type="submit" style="margin-right: 10px;">Salvar</button>
+      <button type="button" onclick="fecharModalEditar()">Cancelar</button>
+    </form>
+  </div>
+
+  <div id="overlayModal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index: 999;"></div>
+
+  <script>
+    function carregarNomeUsuario() {
+      const nome = localStorage.getItem('usuarioLogado') || 'Usuário';
+      document.getElementById('nomeUsuario').textContent = nome;
+    }
+
+    // Carrega a lista de vendedores da storage e popula a tabela
+    function carregarVendedores() {
+      const lista = document.getElementById('listaVendedores');
+      lista.innerHTML = '';
+      const vendedores = JSON.parse(localStorage.getItem('vendedores') || '[]');
+
+      vendedores.forEach((vendedor, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${vendedor.nome}</td>
+          <td>${vendedor.localidade}</td>
+          <td>${parseFloat(vendedor.cotacao).toFixed(2)}</td>
+          <td>
+            <button onclick="abrirModalEditar(${index})">Editar</button>
+            <button onclick="excluirVendedor(${index})" style="margin-left:5px; color: red;">Excluir</button>
+          </td>
+        `;
+        lista.appendChild(tr);
+      });
+    }
+
+    // Modal editar
+    function abrirModalEditar(index) {
+      const vendedores = JSON.parse(localStorage.getItem('vendedores') || '[]');
+      const vendedor = vendedores[index];
+
+      document.getElementById('editNome').value = vendedor.nome;
+      document.getElementById('editLocalidade').value = vendedor.localidade;
+      document.getElementById('editCotacao').value = vendedor.cotacao;
+
+      document.getElementById('formEditarVendedor').dataset.index = index;
+
+      document.getElementById('modalEditar').style.display = 'block';
+      document.getElementById('overlayModal').style.display = 'block';
+    }
+
+    function fecharModalEditar() {
+      document.getElementById('modalEditar').style.display = 'none';
+      document.getElementById('overlayModal').style.display = 'none';
+    }
+
+    // Salvar edição
+    document.getElementById('formEditarVendedor').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const index = this.dataset.index;
+      const nome = document.getElementById('editNome').value.trim();
+      const localidade = document.getElementById('editLocalidade').value.trim();
+      const cotacao = parseFloat(document.getElementById('editCotacao').value);
+
+      if (!nome || !localidade || isNaN(cotacao)) {
+        alert('Por favor, preencha todos os campos corretamente.');
+        return;
+      }
+
+      let vendedores = JSON.parse(localStorage.getItem('vendedores') || '[]');
+      vendedores[index] = { nome, localidade, cotacao };
+      localStorage.setItem('vendedores', JSON.stringify(vendedores));
+      fecharModalEditar();
+      carregarVendedores();
+      alert('Vendedor atualizado com sucesso!');
+    });
+
+    // Excluir vendedor
+    function excluirVendedor(index) {
+      if (!confirm('Tem certeza que deseja excluir este vendedor?')) return;
+
+      let vendedores = JSON.parse(localStorage.getItem('vendedores') || '[]');
+      vendedores.splice(index, 1);
+      localStorage.setItem('vendedores', JSON.stringify(vendedores));
+      carregarVendedores();
+      alert('Vendedor excluído com sucesso!');
+    }
+
+    // Inicialização
+    carregarNomeUsuario();
+    carregarVendedores();
+  </script>
+  <button class="btn" onclick="showSlide(1)">Voltar</button></div>
 </div>
 
 
@@ -1115,6 +1230,7 @@
 
 </body>
 </html>
+
 
 
 
